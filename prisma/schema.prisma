@@ -13,7 +13,7 @@ model Product {
   slug        String   @unique
   price       Float
   description String
-  image       String
+  image       String?
   createdAt   DateTime @default(now()) @map("created_at")
   category    String
   isAvailable Boolean  @default(true) @map("is_available")
