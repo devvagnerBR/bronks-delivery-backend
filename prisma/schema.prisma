@@ -18,18 +18,25 @@ model Product {
   category    String
   isAvailable Boolean  @default(true) @map("is_available")
 
+  companyId String  @map("company_id")
+  Company   Company @relation(fields: [companyId], references: [id])
+
+  @@unique([companyId, name])
+  @@unique([companyId, slug])
   @@map("products")
 }
 
 model Company {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  slug      String   @unique
-  phone     String
-  email     String
-  isActive  Boolean  @default(true) @map("is_active")
-  createdAt DateTime @default(now()) @map("created_at")
-  ownerName String   @map("owner_name")
+  id          String    @id @default(cuid())
+  companyName String    @unique @map("company_name")
+  phone       String    @unique
+  email       String    @unique
+  code        String    @unique
+  tokenApi    String    @unique @default(uuid()) @map("token_api")
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  ownerName   String    @map("owner_name")
+  products    Product[]
 
   @@map("companies")
 }

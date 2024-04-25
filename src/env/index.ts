@@ -3,8 +3,10 @@ import 'dotenv/config'
 
 const envSchema = z.object( {
 
-    PORT: z.coerce.number().default( 3333 ),
-
+    PORT: z.coerce.number().default( Number( process.env.PORT ) ),
+    PASSWORD_LENGTH: z.coerce.number().default( Number( process.env.PASSWORD_LENGTH ) ),
+    PASSWORD_CHARSET: z.string().default( process.env.PASSWORD_CHARSET! ),
+    API_KEY_ADMIN: z.string().default( process.env.API_KEY_ADMIN! ),
 } )
 
 const _env = envSchema.safeParse( process.env )

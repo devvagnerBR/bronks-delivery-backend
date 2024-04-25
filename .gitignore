@@ -1,5 +1,5 @@
-node_modules
 .env
-build
 .vscode
+node_modules
 notes.md
+build
