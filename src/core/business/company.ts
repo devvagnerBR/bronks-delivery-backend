@@ -65,4 +65,9 @@ export class COMPANY_BUSINESS {
 
         return product;
     }
+
+    async listCompanies( secret: string ) {
+        if ( secret !== process.env.SECRET_ADMIN ) throw new CustomError( 401, 'Acesso negado' );
+        return await this.companyDatabase.listCompanies();
+    }
 }

@@ -16,4 +16,7 @@ export async function companyRouter( app: FastifyInstance ) {
     app.get( '/company/product/list', { onRequest: [verifyCompanyId] }, company.listProducts );
     app.get( '/company/product/:productId', { onRequest: [verifyCompanyId] }, company.getProductById );
 
+    //admin
+    app.get( '/company/list', company.listCompanies );
+
 }

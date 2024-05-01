@@ -4,7 +4,6 @@ import { Prisma } from "@prisma/client";
 export class COMPANY_DATABASE {
 
     //queries company
-
     async getCompanyByName( companyName: string ) {
         return await PRISMA.company.findFirst( {
             where: { companyName }
@@ -108,6 +107,20 @@ export class COMPANY_DATABASE {
         } );
     }
 
-
-
+    async listCompanies() {
+        return await PRISMA.company.findMany(
+            {
+                where: { isActive: true },
+                select: {
+                    id: true,
+                    companyName: true,
+                    ownerName: true,
+                    email: true,
+                    phone: true,
+                    createdAt: true,
+                    code: true
+                }
+            }
+        );
+    }
 }

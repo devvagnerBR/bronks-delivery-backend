@@ -86,7 +86,6 @@ export async function COMPANY_CONTROLLER() {
 
     }
 
-
     async function listProducts( req: FastifyRequest, res: FastifyReply ) {
 
         const apiKeySchema = z.string( z.string() )
@@ -99,6 +98,17 @@ export async function COMPANY_CONTROLLER() {
 
     }
 
+
+    async function listCompanies( req: FastifyRequest, res: FastifyReply ) {
+
+        const secretSchema = z.string( z.string() );
+        const secret = secretSchema.safeParse( req.headers['secret-admin'] );
+        if ( !secret.success ) return res.status( 400 ).send( { message: "acesso negado" } );
+
+        const companies = await company.listCompanies( secret.data );
+        return res.status( 200 ).send( companies );
+
+    }
 
     async function getProductById( req: FastifyRequest, res: FastifyReply ) {
 
@@ -116,7 +126,8 @@ export async function COMPANY_CONTROLLER() {
         authenticate,
         addNewProduct,
         listProducts,
-        getProductById
+        getProductById,
+        listCompanies
     }
 
 }
