@@ -9,12 +9,12 @@ export async function COMPANY_CONTROLLER() {
 
     async function registerCompany( req: FastifyRequest, res: FastifyReply ) {
 
-        const apiKeySchema = z.string( z.string( { required_error: "api-key é obrigatório" } ) )
-        const apiKey = apiKeySchema.safeParse( req.headers['api-key'] );
+        // const apiKeySchema = z.string( z.string( { required_error: "api-key é obrigatório" } ) )
+        // const apiKey = apiKeySchema.safeParse( req.headers['api-key'] );
 
-        if ( apiKey.data !== process.env.API_KEY_ADMIN ) return res.status( 401 ).send( { message: "você não tem permissão para realizar essa ação" } )
+        // if ( apiKey.data !== process.env.API_KEY_ADMIN ) return res.status( 401 ).send( { message: "você não tem permissão para realizar essa ação" } )
 
-        if ( !apiKey.success ) return res.status( 400 ).send( { message: "api-key é obrigatório" } )
+        // if ( !apiKey.success ) return res.status( 400 ).send( { message: "api-key é obrigatório" } )
 
         const bodySchema = z.object( {
             companyName: z.string( { message: "campo obrigatório" } ).min( 3 ),
