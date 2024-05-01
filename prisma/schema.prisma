@@ -11,7 +11,9 @@ model Product {
   id          String   @id @default(cuid())
   name        String   @unique
   slug        String   @unique
-  price       Float
+  priceP      Float    @map("price_p")
+  priceM      Float    @map("price_m")
+  priceG      Float    @map("price_g")
   description String
   image       String?
   createdAt   DateTime @default(now()) @map("created_at")
@@ -19,7 +21,7 @@ model Product {
   isAvailable Boolean  @default(true) @map("is_available")
 
   companyId String  @map("company_id")
-  Company   Company @relation(fields: [companyId], references: [id])
+  Company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
 
   @@unique([companyId, name])
   @@unique([companyId, slug])

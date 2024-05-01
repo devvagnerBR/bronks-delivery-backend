@@ -52,11 +52,15 @@ export class COMPANY_DATABASE {
     }
 
     async addNewProduct( body: Prisma.ProductCreateWithoutCompanyInput, companyId: string ) {
+
+
         await PRISMA.product.create( {
             data: {
                 name: body.name,
                 description: body.description,
-                price: body.price,
+                priceP: body.priceP,
+                priceM: body.priceM,
+                priceG: body.priceG,
                 slug: body.slug,
                 category: body.category,
                 companyId
@@ -65,13 +69,17 @@ export class COMPANY_DATABASE {
     }
 
     async listProducts( companyId: string ) {
+
+
         return await PRISMA.product.findMany( {
             where: { companyId },
             select: {
                 id: true,
                 name: true,
                 slug: true,
-                price: true,
+                priceP: true,
+                priceM: true,
+                priceG: true,
                 description: true,
                 category: true,
                 image: true,
@@ -83,7 +91,20 @@ export class COMPANY_DATABASE {
 
     async getProductById( id: string ) {
         return await PRISMA.product.findFirst( {
-            where: { id}
+            where: { id },
+            select: {
+                id: true,
+                name: true,
+                slug: true,
+                priceP: true,
+                priceM: true,
+                priceG: true,
+                description: true,
+                category: true,
+                image: true,
+                isAvailable: true,
+                createdAt: true,
+            }
         } );
     }
 

@@ -30,7 +30,7 @@ export class COMPANY_BUSINESS {
         return await this.companyDatabase.authenticate( email, code );
     }
 
-    async addNewProduct( data: { name: string, description: string, price: number, category: string }, companyId: string ) {
+    async addNewProduct( data: { name: string, description: string, priceP: number, priceM: number, priceG: number, category: string }, companyId: string ) {
 
         const nameExists = await this.companyDatabase.getProductByName( data.name );
         if ( nameExists ) throw new CustomError( 409, 'Já existe um produto com esse nome' );
@@ -40,7 +40,9 @@ export class COMPANY_BUSINESS {
         const body = {
             name: data.name,
             description: data.description,
-            price: data.price,
+            priceP: data.priceP,
+            priceM: data.priceM,
+            priceG: data.priceG,
             category: data.category,
             slug
         }
@@ -52,9 +54,7 @@ export class COMPANY_BUSINESS {
     }
 
     async listProducts( companyId: string ) {
-
         return await this.companyDatabase.listProducts( companyId );
-
     }
 
     async getProductById( id: string ) {

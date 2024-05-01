@@ -38,13 +38,13 @@ export async function COMPANY_CONTROLLER() {
     }
 
     async function authenticate( req: FastifyRequest, res: FastifyReply ) {
-
         const bodySchema = z.object( {
             email: z.string( { message: "campo obrigatório" } ).email().transform( v => v.toLowerCase() ),
             code: z.string( { message: "campo obrigatório" } )
         } );
 
         const body = bodySchema.safeParse( req.body );
+
 
         if ( !body.success ) return res.status( 400 ).send( body.error.format() );
 
@@ -56,12 +56,8 @@ export async function COMPANY_CONTROLLER() {
             sub: companyExists.id
         }, { expiresIn: env.JWT_EXPIRES_IN } )
 
-        return res.setCookie( 'token', token, {
-            path: '/',
-            httpOnly: true,
-            secure: false, // setar para true em produção
-            sameSite: true
-        } ).status( 200 ).send( { message: 'Autenticado com sucesso' } );
+
+        return res.status( 200 ).send( { token } );
     }
 
     async function addNewProduct( req: FastifyRequest, res: FastifyReply ) {
@@ -74,29 +70,31 @@ export async function COMPANY_CONTROLLER() {
         const bodySchema = z.object( {
             name: z.string( { message: "campo obrigatório" } ).min( 3 ),
             description: z.string( { message: "campo obrigatório" } ).min( 3 ),
-            price: z.number( { message: "campo obrigatório" } ).positive(),
+            priceP: z.number( { message: "campo obrigatório" } ),
+            priceM: z.number( { message: "campo obrigatório" } ),
+            priceG: z.number( { message: "campo obrigatório" } ),
             category: z.string( { message: "campo obrigatório" } ).min( 3 )
         } );
 
         const body = bodySchema.safeParse( req.body );
         if ( !body.success ) return res.status( 400 ).send( body.error.format() );
 
-        const companyId = req.user.sub;
-        if ( !companyId ) return res.status( 401 ).send( { message: 'Você não tem permissão para realizar essa ação' } );
 
-        await company.addNewProduct( body.data, companyId );
+        await company.addNewProduct( body.data, apiKey.data );
 
         return res.status( 201 ).send( { message: 'Produto cadastrado com sucesso' } );
 
     }
 
+
     async function listProducts( req: FastifyRequest, res: FastifyReply ) {
 
-        const companyId = req.user.sub;
-        if ( !companyId ) return res.status( 401 ).send( { message: 'Você não tem permissão para realizar essa ação' } );
+        const apiKeySchema = z.string( z.string() )
+        const apiKey = apiKeySchema.safeParse( req.headers['api-key'] );
 
-        const products = await company.listProducts( companyId );
+        if ( !apiKey.success ) return res.status( 400 ).send( { message: "api-key é obrigatório" } );
 
+        const products = await company.listProducts( apiKey.data );
         return res.status( 200 ).send( products );
 
     }
@@ -112,7 +110,7 @@ export async function COMPANY_CONTROLLER() {
         return res.status( 200 ).send( product );
     }
 
-    
+
     return {
         registerCompany,
         authenticate,
